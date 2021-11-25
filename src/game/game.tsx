@@ -60,8 +60,8 @@ export const Game: React.FunctionComponent<GameProps> = ({ storyContent }) => {
               </p>
             <p>
               Each question has a number of clues that need to be assigned to answer it. The question gives you
-              some pointers as to which clues should be assigned to this question. Click on the clues in the list
-              at the bottom of the page to select them for the current question.
+              some pointers as to which clues should be assigned to this question. Drag the clues in the list
+              at the bottom of the page and drop them in the clue slots bellow the question to select them.
             </p>
             <p>
               If you get things wrong, the selected clues will glow red. Click the reset button bellow the
