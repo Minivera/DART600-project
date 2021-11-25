@@ -1,9 +1,10 @@
 /** @jsx jsx */
 import { FunctionComponent } from 'react';
 import { css, jsx } from '@emotion/react';
+import { darken, transparentize } from 'polished';
 
 import { Clue } from '../game/gameState';
-import { darken, transparentize } from 'polished';
+import { GameClue } from './gameClue';
 
 export interface GameCluesProps {
   clues: Clue[];
@@ -61,48 +62,7 @@ export const GameClues: FunctionComponent<GameCluesProps> = ({
             `}
           >
             {validClues.map(clue => (
-              <div
-                key={clue.clueId}
-                css={theme => css`
-                  min-width: 20rem;
-                  margin: 1rem;
-                  color: ${darken(0.5, theme.colors.primaryDark)};
-                  background-color: ${transparentize(
-                    0.4,
-                    theme.colors.primary
-                  )};
-                  border-radius: 15px;
-                  height: 15rem;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  flex-direction: column;
-                  padding: 0.5rem;
-                  box-shadow: 0 0 0.2rem 0.1rem ${theme.colors.text};
-                  cursor: pointer;
-
-                  &:hover {
-                    box-shadow: 0 0 0.4rem 0.1rem ${theme.colors.text};
-                  }
-                `}
-                onClick={() => onClueSelected(clue)}
-              >
-                <p
-                  css={css`
-                    font-size: 1.1rem;
-                    margin-bottom: 0.5rem;
-                  `}
-                  dangerouslySetInnerHTML={{ __html: clue.text }}
-                />
-                <p
-                  css={css`
-                    font-style: italic;
-                    margin-top: 0.5rem;
-                  `}
-                >
-                  {clue.question}
-                </p>
-              </div>
+              <GameClue key={clue.clueId} clue={clue} onClueSelected={onClueSelected} />
             ))}
           </div>
         </div>

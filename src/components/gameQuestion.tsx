@@ -4,6 +4,7 @@ import { css, jsx } from '@emotion/react';
 import { darken, transparentize } from 'polished';
 
 import { Question } from '../game/gameState';
+import { useDrop } from 'react-dnd';
 
 export interface GameQuestionProps {
   question: Question;
@@ -12,6 +13,16 @@ export interface GameQuestionProps {
 export const GameQuestion: FunctionComponent<GameQuestionProps> = ({
   question,
 }) => {
+  const [{ isOver }, drop] = useDrop(
+    () => ({
+      accept: 'clue',
+      collect: monitor => ({
+        isOver: monitor.isOver(),
+      }),
+    }),
+    []
+  );
+
   const hasWrongClues =
     question.feedback && question.selectedClues.length === question.cluesNeeded;
 
@@ -124,10 +135,19 @@ export const GameQuestion: FunctionComponent<GameQuestionProps> = ({
       </p>
       {hasWrongClues && <p>{question.feedback}</p>}
       <div
-        css={css`
+        ref={drop}
+        css={theme => css`
           width: 720px;
           display: flex;
           flex-wrap: wrap;
+
+          ${isOver
+            ? `
+            & > div {
+              box-shadow: 0 0 0.4rem 0.1rem ${theme.colors.text};
+            }
+          `
+            : ''}
         `}
       >
         {cluesSpots}
