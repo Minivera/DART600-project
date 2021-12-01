@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Story } from 'inkjs/engine/Story';
 
 import { Game } from './game';
@@ -55,12 +55,12 @@ const processQuestion = (
   result: string,
   story: Story
 ): {
-  question: Question;
+  question?: Question;
   oldQuestion?: Question;
   nextStory?: string;
   clues: Clue[];
 } => {
-  let question: Question = {
+  let question: Question | undefined = {
     cluesNeeded: 0,
     selectedClues: [],
     question: result,
@@ -81,7 +81,7 @@ const processQuestion = (
 
   // When hitting a question, continue the story to also hit the selected clues and the known clues
   let selectedClues = false;
-  while (story.canContinue) {
+  while (question && story.canContinue) {
     let next = story.Continue();
     if (!selectedClues && story.currentTags?.includes('clues_start')) {
       clues = story.currentChoices.map(choice => {
@@ -136,7 +136,12 @@ const processQuestion = (
       clues = newClues;
     } else if (next && story.currentTags?.includes('story_start')) {
       // If we suddenly hit the real world story, return that
-      return { question, oldQuestion, clues, nextStory: next };
+      return {
+        question: undefined,
+        oldQuestion: question,
+        clues,
+        nextStory: next,
+      };
     }
   }
 
@@ -144,7 +149,7 @@ const processQuestion = (
 };
 
 export const useGame = (
-  storyContent: string
+  story: Story
 ): [Game, Story, (action: GameAction) => void] => {
   const [state, setState] = useState<Game>({
     state: GameState.Ready,
@@ -152,13 +157,6 @@ export const useGame = (
     clues: [],
     oldQuestions: [],
   });
-
-  const story = useMemo<Story>(
-    () =>
-      // JSON has invalid char at index 0 for some reason
-      new Story(storyContent.slice(1)),
-    [storyContent]
-  );
 
   const dispatch = (action: GameAction): void => {
     switch (action.type) {
@@ -267,10 +265,10 @@ export const useGame = (
       case 'click_clue': {
         (story.variablesState as unknown as Record<string, unknown>)[
           `${action.clueName}_activated`
-        ] = true;
+          ] = true;
         (story.variablesState as unknown as Record<string, unknown>)[
           'at_least_one_activated_clue'
-        ] = true;
+          ] = true;
 
         if (state.currentQuestion) {
           dispatch({
@@ -308,6 +306,16 @@ export const useGame = (
       }));
     }
   }, []);
+
+  // This memo here will reset the state on a story object change
+  useMemo<void>(() => {
+    setState({
+      state: GameState.Ready,
+      storyText: [],
+      clues: [],
+      oldQuestions: [],
+    });
+  }, [story]);
 
   return [state, story, dispatch];
 };

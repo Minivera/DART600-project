@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import React from 'react';
 import { css, jsx, Global } from '@emotion/react';
+import { Story } from 'inkjs/engine/Story';
 
 import { Clue, GameState, useGame } from './gameState';
 import { GameContent } from '../components/gameContent';
 import { darken, transparentize } from 'polished';
 
 export interface GameProps {
-  storyContent: string;
+  storyContent: Story;
 }
 
 export const Game: React.FunctionComponent<GameProps> = ({ storyContent }) => {
