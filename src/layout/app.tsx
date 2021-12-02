@@ -8,7 +8,7 @@ import { Story } from 'inkjs/engine/Story';
 import { Game } from '../game/game';
 import { theme } from '../theme';
 
-import storyContent from '../../data/tutorial.json?raw';
+import storyContent from '../../data/bears.json?raw';
 
 interface StoryThemeVariables {
   primary_color?: string;

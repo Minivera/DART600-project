@@ -41,7 +41,7 @@ export const GameContent: FunctionComponent<GameContentProps> = ({
   const convertText = (text: string, index: number): React.ReactElement[] => {
     let match = text.match(extractionRegex);
     if (!match) {
-      return [<span key={index}>{text}</span>];
+      return [<span key={index} dangerouslySetInnerHTML={{ __html: text }} />];
     }
 
     const clueName: string = match[3];
@@ -64,7 +64,10 @@ export const GameContent: FunctionComponent<GameContentProps> = ({
       >
         {match[2]}
       </a>,
-      <span key={`${index}_3`}>{match[4]}</span>,
+      <span
+        key={`${index}_3`}
+        dangerouslySetInnerHTML={{ __html: match[4] }}
+      />,
     ];
   };
 

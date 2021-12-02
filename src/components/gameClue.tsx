@@ -35,7 +35,7 @@ export const GameClue: FunctionComponent<GameClueProps> = ({
       css={theme => css`
         ${isDragging ? 'opacity: 0.7;' : ''}
 
-        width: 20rem;
+        min-width: 20rem;
         margin: 1rem;
         color: ${darken(0.5, theme.colors.primaryDark)};
         background-color: ${transparentize(0.4, theme.colors.primary)};
